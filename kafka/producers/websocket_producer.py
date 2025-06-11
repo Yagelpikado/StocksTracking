@@ -20,6 +20,7 @@ def on_message(ws, message):
         return
     for trade in msg["data"]:
         # Send to Kafka
+        print("price update sent")
         producer.produce(KAFKA_TOPIC, json.dumps(trade, indent=4))
     producer.poll(0)
 
