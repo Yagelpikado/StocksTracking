@@ -2,7 +2,10 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StringType, ArrayType, DoubleType, LongType, IntegerType
 from pyspark.sql.functions import from_json, col
 from pyspark.sql.streaming import StreamingQueryListener
-
+import sys, os
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.append(project_root)
+from env import KAFKA_BOOTSTRAP_SERVER, KAFKA_STREAMING_TOPIC
 # Listener for tracking spark batches status and rows numbers
 class SparkListener(StreamingQueryListener):
     def onQueryStarted(self, event):
@@ -19,15 +22,15 @@ class SparkListener(StreamingQueryListener):
 
 # New spark session
 spark_inst = SparkSession.builder.appName("KafkaSparkConsumer")\
-    .master("local[*]").config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.13:3.4.1")\
+    .master("local[*]").config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.13:4.0.0")\
     .getOrCreate()
 spark_inst.streams.addListener(SparkListener())
 
 # Read webstock stream from kafka broker for my stock_stream topic
 df = spark_inst.readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "172.20.15.243:9092") \
-    .option("subscribe", "stock_stream") \
+    .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVER) \
+    .option("subscribe", KAFKA_STREAMING_TOPIC) \
     .option("startingOffsets", "earliest") \
     .load()
 
@@ -38,7 +41,8 @@ schema = StructType()\
     .add("s", StringType()) \
     .add("t", LongType()) \
     .add("v", IntegerType())
-    
+
+# Convert kafka binary data to json/str
 json_df = df.selectExpr("CAST(value AS STRING) as json_str") \
     .select(from_json(col("json_str"), schema).alias("data")) \
     .select("data.*")

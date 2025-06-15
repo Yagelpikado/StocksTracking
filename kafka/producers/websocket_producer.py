@@ -1,16 +1,12 @@
-import json
-import websocket
+import json, os, websocket,sys
 from confluent_kafka import Producer
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.append(project_root)
+from env import FINNHUB_API_KEY, SYMBOLS, KAFKA_BOOTSTRAP_SERVER, KAFKA_STREAMING_TOPIC
 
-# Your Finnhub API key
-FINNHUB_API_KEY = 'd0tfuepr01qlvahbtb2gd0tfuepr01qlvahbtb30'
-# List of finnhub's stock symbols
-SYMBOLS =['AAPL', 'GOOG', 'MSFT', 'TSLA'] 
-
-# Kafka configuration
-KAFKA_BOOTSTRAP_SERVERS = '172.20.15.243:9092'
-KAFKA_TOPIC = 'stock_stream'
-producer = Producer({'bootstrap.servers': KAFKA_BOOTSTRAP_SERVERS})
+print(FINNHUB_API_KEY)
+exit()
+producer = Producer({'bootstrap.servers': KAFKA_BOOTSTRAP_SERVER})
 
 def on_message(ws, message):
     msg = json.loads(message)
@@ -21,7 +17,7 @@ def on_message(ws, message):
     for trade in msg["data"]:
         # Send to Kafka
         print("price update sent")
-        producer.produce(KAFKA_TOPIC, json.dumps(trade, indent=4))
+        producer.produce(KAFKA_STREAMING_TOPIC, json.dumps(trade, indent=4))
     producer.poll(0)
 
 def on_error(ws, error):

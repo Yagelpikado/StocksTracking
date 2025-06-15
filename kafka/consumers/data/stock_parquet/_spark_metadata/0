@@ -1,0 +1,4 @@
+v1
+{"path":"file:///mnt/c/Users/yagel/Projects/DE-financial-data-pipeline/kafka/consumers/data/stock_parquet/part-00000-d17c6d19-d860-47f7-af9e-00d417c09065-c000.snappy.parquet","size":2863,"isDir":false,"modificationTime":1749988458808,"blockReplication":1,"blockSize":33554432,"action":"add"}
+{"path":"file:///mnt/c/Users/yagel/Projects/DE-financial-data-pipeline/kafka/consumers/data/stock_parquet/part-00001-f08aa6a4-c43c-4903-b850-064a3af7e036-c000.snappy.parquet","size":2960,"isDir":false,"modificationTime":1749988458808,"blockReplication":1,"blockSize":33554432,"action":"add"}
+{"path":"file:///mnt/c/Users/yagel/Projects/DE-financial-data-pipeline/kafka/consumers/data/stock_parquet/part-00002-86d2f02d-350e-4839-ac23-57d880334d54-c000.snappy.parquet","size":3431,"isDir":false,"modificationTime":1749988458808,"blockReplication":1,"blockSize":33554432,"action":"add"}
